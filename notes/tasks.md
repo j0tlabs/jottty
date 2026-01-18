@@ -3,7 +3,7 @@
 ## Version 0.1.0
 - [x] Set up project structure
 - [x] Define the first api versvion via cli
-- [ ] Define the database schema and data models document on this [db internals](./db.md)
+- [x] Define the database schema and data models document on this [db internals](./db.md)
 - [ ] Implement the database layer
 - [ ] Implement the cli command api
 - [ ] Write tests for the implemented features
