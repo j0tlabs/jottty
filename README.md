@@ -10,7 +10,7 @@ and access them whenever you need.
 
 To jot = to make a short, quick note so you don’t forget.
 
-![view](./img/view.png)
+![view](./img/view.svg)
 
 # How to install.
 
