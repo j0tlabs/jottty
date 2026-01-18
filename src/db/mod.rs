@@ -1,5 +1,6 @@
 mod datom;
 mod transit;
+pub use datom::{Datom, DatomOp, Entity, apply_datoms};
 
 use std::str::FromStr;
 use std::{env, fs, path::PathBuf};
@@ -117,7 +118,6 @@ pub async fn init_db() {
 mod tests {
     use super::*;
     use sqlx::Row;
-
 
     //TODO@chico: reuse this function
     fn unique_test_db_path(test_name: &str) -> std::path::PathBuf {

@@ -1,7 +1,8 @@
 mod cli;
-mod db;
-mod date;
 mod config;
+mod date;
+mod db;
+mod transact;
 use db::init_db;
 
 #[tokio::main]
