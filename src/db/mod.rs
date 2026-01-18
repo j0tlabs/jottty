@@ -118,11 +118,22 @@ mod tests {
     use super::*;
     use sqlx::Row;
 
+
+    //TODO@chico: reuse this function
+    fn unique_test_db_path(test_name: &str) -> std::path::PathBuf {
+        let mut path = std::env::temp_dir();
+        let pid = std::process::id();
+        let ts = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        path.push(format!("jottty_{}_{}_{}.db", test_name, pid, ts));
+        path
+    }
+
     #[tokio::test]
     async fn init_db_creates_db_file() {
-        let mut db_path = std::env::temp_dir();
-        db_path.push(format!("jottty_test_{}.db", std::process::id()));
-
+        let db_path = unique_test_db_path("apply_datoms");
         unsafe {
             std::env::set_var("JOTTTY_DB_PATH", db_path.to_string_lossy().to_string());
         }
