@@ -41,3 +41,22 @@
 
       <!-- divider -->
       <line x1="78" y1="138" x2="800" y2="138"
+            stroke="#1f2937" stroke-width="2"/>
+
+      <!-- journal header -->
+      <text x="78" y="168" font-size="18" fill="#94a3b8">
+        📅 Today — 2026-01-17
+      </text>
+
+      <!-- example lines -->
+      <text x="78" y="200" font-size="18" fill="#e5e7eb">
+        ✎ Jot this down.
+      </text>
+
+      <text x="78" y="228" font-size="18" fill="#e5e7eb">
+        ✎ I jotted a reminder during the meeting.
+      </text>
+
+    </g>
+  </g>
+</svg>
