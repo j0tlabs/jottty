@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 420" width="920" height="420" role="img" aria-label="Jottty logo - terminal bonsai">
+  <defs>
+    <!-- background -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+
+    <!-- subtle glow for the "data stream" -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity="0.45"/>
+    </filter>
+
+    <!-- plant colors -->
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+
+    <linearGradient id="trunk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </linearGradient>
+
+    <linearGradient id="pot" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+
+    <!-- paper-ish "note leaves" tint -->
+    <linearGradient id="noteLeaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+
+  <!-- terminal (left) -->
+  <g filter="url(#softShadow)">
+    <rect x="80" y="90" width="320" height="220" rx="18"
+          fill="#020617" stroke="#1e293b" stroke-width="2"/>
+
+    <!-- top bar -->
+    <rect x="80" y="90" width="320" height="40" rx="18" fill="#020617"/>
+    <rect x="80" y="110" width="320" height="20" fill="#020617"/>
+
+    <!-- window controls -->
+    <circle cx="110" cy="110" r="6" fill="#ef4444"/>
+    <circle cx="130" cy="110" r="6" fill="#f59e0b"/>
+    <circle cx="150" cy="110" r="6" fill="#22c55e"/>
+
+    <!-- prompt line -->
+    <text x="110" y="185" font-size="26" fill="#34d399"
+          font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace">$</text>
+    <text x="135" y="185" font-size="26" fill="#e5e7eb"
+          font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace">jottty add</text>
+
+    <!-- output slot -->
+    <rect x="392" y="190" width="10" height="24" rx="2" fill="#0b1220"/>
+  </g>
+
+  <!-- "data -> growth" stream -->
+  <path d="M402 205 C470 160, 510 240, 560 215"
+        stroke="#34d399" stroke-width="4" fill="none"
+        stroke-dasharray="10 8" filter="url(#glow)"/>
+
+  <!-- bonsai (right) -->
+  <g filter="url(#softShadow)">
+    <!-- pot shadow -->
+    <ellipse cx="690" cy="318" rx="90" ry="12" fill="#020617" opacity="0.65"/>
+
+    <!-- pot -->
+    <path d="M620 285
+             Q690 260 760 285
+             L745 330
+             Q690 350 635 330
+             Z"
+          fill="url(#pot)" stroke="#475569" stroke-width="2"/>
+
+    <!-- pot lip -->
+    <path d="M612 285
+             Q690 250 768 285
+             Q690 305 612 285
+             Z"
+          fill="#1f2937" opacity="0.9"/>
+
+    <!-- soil -->
+    <path d="M640 295 Q690 275 740 295 Q690 305 640 295 Z"
+          fill="#0b1220" opacity="0.9"/>
+
+    <!-- trunk (stylized bonsai) -->
+    <path d="M690 290
+             C682 265, 675 250, 682 232
+             C688 216, 710 208, 706 190
+             C701 165, 665 170, 660 145"
+          fill="none" stroke="url(#trunk)" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- branch -->
+    <path d="M694 235
+             C715 228, 733 220, 748 206"
+          fill="none" stroke="url(#trunk)" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- small branch -->
+    <path d="M684 215
+             C665 205, 650 192, 640 178"
+          fill="none" stroke="url(#trunk)" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- leaf clusters (green) -->
+    <g>
+      <ellipse cx="655" cy="148" rx="34" ry="22" fill="url(#leaf)" opacity="0.95"/>
+      <ellipse cx="640" cy="172" rx="30" ry="20" fill="url(#leaf)" opacity="0.90"/>
+      <ellipse cx="678" cy="172" rx="34" ry="22" fill="url(#leaf)" opacity="0.92"/>
+
+      <ellipse cx="748" cy="205" rx="32" ry="20" fill="url(#leaf)" opacity="0.90"/>
+      <ellipse cx="728" cy="220" rx="30" ry="18" fill="url(#leaf)" opacity="0.88"/>
+      <ellipse cx="770" cy="220" rx="30" ry="18" fill="url(#leaf)" opacity="0.88"/>
+    </g>
+
+    <!-- "note leaves" (paper-like leaves) -->
+    <g stroke="#94a3b8" stroke-width="2">
+      <path d="M620 168
+               Q632 150 652 156
+               Q644 178 624 180
+               Z" fill="url(#noteLeaf)"/>
+      <line x1="628" y1="168" x2="646" y2="164"/>
+      <line x1="628" y1="174" x2="644" y2="170"/>
+
+      <path d="M770 210
+               Q786 198 800 210
+               Q790 232 770 230
+               Z" fill="url(#noteLeaf)"/>
+      <line x1="776" y1="214" x2="794" y2="214"/>
+      <line x1="776" y1="220" x2="792" y2="220"/>
+    </g>
+  </g>
+
+  <!-- optional: tiny caption (remove if you want pure iconography) -->
+  <text x="80" y="380"
+        font-size="14" fill="#94a3b8"
+        font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace">
+    terminal capture → growing knowledge
+  </text>
+</svg>
