@@ -118,9 +118,28 @@ async fn load_entity(conn: &mut SqliteConnection, entity_id: &str) -> Result<Ent
     })
 }
 
-async fn scan_entities() -> Result<Vec<Entity>, sqlx::Error> {
-    // TODO@chico: implement scanning all entities from the vaults table.
-    unimplemented!()
+//TODO@chico: write tests for scan_entities
+//
+/// scan_entities() scans all entities from the vaults table.
+/// It decodes each entity and collects them into a vector.
+/// # Arguments
+/// * `conn` - A mutable reference to a SqliteConnection.
+async fn scan_entities(conn: &mut SqliteConnection) -> Result<Vec<Entity>, sqlx::Error> {
+    let rows = sqlx::query("SELECT content FROM vaults;")
+        .fetch_all(conn)
+        .await?;
+
+    let entities: Vec<Entity> = rows
+        .iter()
+        .filter_map(|row| {
+            let content: String = row.get("content");
+            transit::decode_value(&content)
+                .ok()
+                .and_then(value_to_entity)
+        })
+        .collect();
+
+    Ok(entities)
 }
 
 //// apply_datoms() applies a list of Datoms to the database.
