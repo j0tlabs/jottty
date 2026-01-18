@@ -29,27 +29,27 @@ journals/
   ├── 2026-01-09.md
   └── 2026-01-08.md
 ```
+
 You can view a specific journal by date:
 
 ```bash
 > jottty view 2026-01-09  
-```bash
+```
 
 ```markdown
 # 2026-01-09
 - This is a bullet note in past journal
 ```
-View today's journal:
+
+
+More commands:
 
 ```bash
-> jottty view       
-
-> jottty add "TODO: Finish the project"
-
+> jottty view   ;; can view the todays journal directlyf    
+> jottty add "TODO: Finish the project" ;; TODO: is a tag
+> jottty search "TODO" ;; search all journals for the string
+> jottty tag --filter "TODO" ;; list all tags
 ```
-
-> jottty search "TODO"
-> jottty tag --filter "TODO"
 
 You can also edit the file directly:
 This will open the today's journal in your default text editor or you can set 
