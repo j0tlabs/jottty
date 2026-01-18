@@ -70,5 +70,3 @@ editor = "nvim"
 dir = "~/.jottty"
 ```
 
-
-
