@@ -14,6 +14,18 @@ To jot = to make a short, quick note so you don’t forget.
 
 # How to install.
 
+Download the installer and run it:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/j0tlabs/jottty/main/install.sh | bash
+```
+
+Install to a custom directory or version:
+
+```bash
+./install.sh --dir "$HOME/.local/bin"
+./install.sh --version v0.1.0
+```
 
 ## Usage
 
@@ -69,4 +81,10 @@ bullet_prefix = "- "
 editor = "nvim"
 dir = "~/.jottty"
 ```
+
+### Contributing
+
+Contributions are welcome! Please feel free to submit issues and pull requests on the GitHub repository.
+The tasks for the project are tracked in the [tasks document](./notes/tasks.md), or you can check the [issues](https://github.com/j0tlabs/jottty/issues) on GitHub. 
+
 
