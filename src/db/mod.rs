@@ -1,6 +1,6 @@
 mod datom;
 mod transit;
-pub use datom::{Datom, DatomOp, Entity, apply_datoms, list_page_blocks};
+pub use datom::{Datom, DatomOp, Entity, apply_datoms, list_page_blocks, list_pages};
 
 use std::str::FromStr;
 use std::{env, fs, path::PathBuf};

@@ -224,7 +224,7 @@ pub async fn run() {
                 return;
             }
 
-            //TODO@chico: it need to split and move this logic is to coupled 
+            //TODO@chico: it need to split and move this logic is to coupled
             //and need to delete the tmp/file for edit
             let edited = match fs::read_to_string(&path) {
                 Ok(content) => content,
@@ -266,6 +266,31 @@ pub async fn run() {
             if let Err(err) = transact_with_fallback(datoms).await {
                 eprintln!("Failed to save journal: {}", err);
             }
+        }
+        "list" => {
+            let pages = match db::list_pages().await {
+                Ok(pages) => pages,
+                Err(err) => {
+                    eprintln!("Failed to list journals: {}", err);
+                    return;
+                }
+            };
+            if pages.is_empty() {
+                println!("journals/ (empty)");
+                return;
+            }
+            println!("journals/");
+            for page in pages {
+                println!("    - {}.md", page);
+            }
+        }
+        "search" => {
+            //TODO@chico: implement search command
+            eprintln!("Error: 'search' command not implemented yet.");
+        }
+        "tag" => {
+            //TODO@chico: implement tag command
+            eprintln!("Error: 'tag' command not implemented yet.");
         }
         _ => {
             eprintln!("Error: Unknown command '{}'.", args[0]);
