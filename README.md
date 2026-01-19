@@ -12,7 +12,21 @@ To jot = to make a short, quick note so you don’t forget.
 
 ![view](./img/view.svg)
 
-# How to install.
+# How run and install.
+## Run via cargo
+For now , you can only run via cargo:
+
+```bash
+cargo run  <command> [args]
+```
+or build the binary and run:
+
+```bash
+cargo build --release
+./target/release/jottty <command> [args]
+```
+
+## Install via script
 
 Download the installer and run it:
 
