@@ -6,6 +6,7 @@ use sqlx::Connection;
 use sqlx::Row;
 use sqlx::SqliteConnection;
 
+use crate::db::conn;
 use crate::db::transit;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -118,9 +119,28 @@ async fn load_entity(conn: &mut SqliteConnection, entity_id: &str) -> Result<Ent
     })
 }
 
-async fn scan_entities() -> Result<Vec<Entity>, sqlx::Error> {
-    // TODO@chico: implement scanning all entities from the vaults table.
-    unimplemented!()
+//TODO@chico: write tests for scan_entities
+//
+/// scan_entities() scans all entities from the vaults table.
+/// It decodes each entity and collects them into a vector.
+/// # Arguments
+/// * `conn` - A mutable reference to a SqliteConnection.
+async fn scan_entities(conn: &mut SqliteConnection) -> Result<Vec<Entity>, sqlx::Error> {
+    let rows = sqlx::query("SELECT content FROM vaults;")
+        .fetch_all(conn)
+        .await?;
+
+    let entities: Vec<Entity> = rows
+        .iter()
+        .filter_map(|row| {
+            let content: String = row.get("content");
+            transit::decode_value(&content)
+                .ok()
+                .and_then(value_to_entity)
+        })
+        .collect();
+
+    Ok(entities)
 }
 
 //// apply_datoms() applies a list of Datoms to the database.
@@ -145,7 +165,7 @@ pub async fn apply_datoms(datoms: &[Datom]) -> Result<Vec<Entity>, sqlx::Error> 
     // we are assuming the db was create and schema ensured at startup.
     // TODO@chico: can improve the apply_datoms performance by batching the writes in a transaction.
     // TODO@chico: this functions can receive a &mut SqliteConnection to avoid opening a new connection each time.
-    let mut conn = crate::db::conn().await;
+    let mut conn = conn().await;
 
     let mut grouped: HashMap<String, Vec<&Datom>> = HashMap::new();
     for datom in datoms {
@@ -170,6 +190,45 @@ pub async fn apply_datoms(datoms: &[Datom]) -> Result<Vec<Entity>, sqlx::Error> 
 
     let _ = conn.close().await;
     Ok(updated)
+}
+
+pub async fn list_pages() -> Result<Vec<String>, sqlx::Error> {
+    let mut conn = conn().await;
+    let entities = scan_entities(&mut conn).await?;
+    let _ = conn.close().await;
+
+    let mut pages = Vec::new();
+    for entity in entities {
+        if let Some(Value::String(name)) = entity.attrs.get("page/name") {
+            pages.push(name.clone());
+        }
+    }
+    pages.sort();
+    pages.dedup();
+    Ok(pages)
+}
+
+//TODO@chico: improve the filtering performance
+//TODO@chico: add pagination support
+//TOODO@chico: add tests for list_page_blocks
+/// list_page_blocks() lists all blocks associated with a given page ID.
+/// It scans all entities and filters those that have a "block/page" attribute
+/// matching the provided page ID.
+pub async fn list_page_blocks(page_id: &str) -> Result<Vec<Entity>, sqlx::Error> {
+    let mut conn = conn().await;
+    let entities = scan_entities(&mut conn).await?;
+    let _ = conn.close().await;
+
+    let mut blocks = Vec::new();
+    for entity in entities {
+        if let Some(Value::String(page)) = entity.attrs.get("block/page") {
+            if page == page_id {
+                blocks.push(entity);
+            }
+        }
+    }
+    blocks.sort_by(|a, b| a.id.cmp(&b.id));
+    Ok(blocks)
 }
 
 #[cfg(test)]

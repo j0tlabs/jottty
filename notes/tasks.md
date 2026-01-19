@@ -4,9 +4,15 @@
 - [x] Set up project structure
 - [x] Define the first api versvion via cli
 - [x] Define the database schema and data models document on this [db internals](./db.md)
-- [ ] Implement the database layer
-- [ ] Implement the cli command api
+- [x] Implement the database layer
+- [x] Implement the cli command api
 - [ ] Write tests for the implemented features
 - [ ] Update the changelog file with the initial version details
 - [ ] Prepare the project for the first release
-- [ ] Open the project repository on GitHub
+- [ ] Write documentation for the cli usage
+- [ ] Create a script to release the project
+- [x] Open the project repository on GitHub
+
+
+## Version 0.2.0
+- [ ] Implement api using axum framework for read the notes via HTTP
