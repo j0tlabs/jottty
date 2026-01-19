@@ -123,6 +123,26 @@ fn print_page_blocks(date: &str, entities: Vec<Entity>, bullet: &str) {
     }
 }
 
+fn page_title_from_id(page_id: &str) -> &str {
+    page_id.strip_prefix("page:").unwrap_or(page_id)
+}
+
+fn print_search_results(entities: Vec<Entity>) {
+    for entity in entities {
+        let title = entity
+            .attrs
+            .get("block/content")
+            .and_then(|val| val.as_str())
+            .unwrap_or("-");
+        let page_id = entity
+            .attrs
+            .get("block/page")
+            .and_then(|val| val.as_str())
+            .unwrap_or("-");
+        println!("{}: {}", page_title_from_id(page_id), title);
+    }
+}
+
 //TODO@chico use a command-line argument parser like clap or structopt
 //
 /// Entry point for the CLI application.
@@ -284,13 +304,40 @@ pub async fn run() {
                 println!("    - {}.md", page);
             }
         }
+        // TODO@chico: add test for the "search" command
         "search" => {
-            //TODO@chico: implement search command
-            eprintln!("Error: 'search' command not implemented yet.");
+            if args.len() < 2 {
+                print_help();
+                return;
+            }
+            // TODO@chico: implement pagination for search results
+            // currently it fetches all matching blocks which can be slow for large datasets
+            let entities = match db::search_blocks(&args[1]).await {
+                Ok(entities) => entities,
+                Err(err) => {
+                    eprintln!("Failed to search journals: {}", err);
+                    return;
+                }
+            };
+            print_search_results(entities);
         }
+        // TODO@chico: add test for the "tag" command
         "tag" => {
-            //TODO@chico: implement tag command
-            eprintln!("Error: 'tag' command not implemented yet.");
+            // in the future tags need to be add in the block/tags [] as a list of tags
+            // so this way we can filter by tags more easily and efficient
+            // also we can create a sqlite of tags for faster searching
+            if args.len() >= 3 && args[1] == "--filter" {
+                let entities = match db::search_blocks(&args[2]).await {
+                    Ok(entities) => entities,
+                    Err(err) => {
+                        eprintln!("Failed to filter tags: {}", err);
+                        return;
+                    }
+                };
+                print_search_results(entities);
+            } else {
+                print_help();
+            }
         }
         _ => {
             eprintln!("Error: Unknown command '{}'.", args[0]);

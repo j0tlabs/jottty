@@ -8,7 +8,7 @@
 - [x] Implement the cli command api
 - [ ] Write tests for the implemented features
 - [ ] Update the changelog file with the initial version details
-- [ ] Prepare the project for the first release
+- [x] Prepare the project for the first release
 - [ ] Write documentation for the cli usage
 - [ ] Create a script to release the project
 - [x] Open the project repository on GitHub
