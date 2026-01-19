@@ -18,7 +18,7 @@ pub struct Config {
     pub editor: String,
 }
 
-fn default_dir() -> PathBuf {
+pub fn default_dir() -> PathBuf {
     let home = env::var("HOME").unwrap_or_else(|_| ".".to_string());
     PathBuf::from(format!("{}/.jottty", home))
 }
@@ -27,7 +27,7 @@ fn default_bullet() -> String {
     "-".to_string()
 }
 
-fn default_editor() -> String {
+pub fn default_editor() -> String {
     env::var("EDITOR").unwrap_or_else(|_| "nvim".to_string())
 }
 
