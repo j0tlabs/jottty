@@ -104,19 +104,16 @@ async fn load_entity(conn: &mut SqliteConnection, entity_id: &str) -> Result<Ent
         .fetch_optional(conn)
         .await?;
 
-    if let Some(row) = row {
-        let content: String = row.get("content");
-        if let Ok(value) = transit::decode_value(&content) {
-            if let Some(entity) = value_to_entity(value) {
-                return Ok(entity);
-            }
-        }
-    }
-
-    Ok(Entity {
-        id: entity_id.to_string(),
-        attrs: Map::new(),
-    })
+    Ok(row
+        .and_then(|row| {
+            transit::decode_value(&row.get::<String, _>("content"))
+                .ok()
+                .and_then(value_to_entity)
+        })
+        .unwrap_or_else(|| Entity {
+            id: entity_id.to_string(),
+            attrs: Map::new(),
+        }))
 }
 
 //TODO@chico: write tests for scan_entities
@@ -192,6 +189,13 @@ pub async fn apply_datoms(datoms: &[Datom]) -> Result<Vec<Entity>, sqlx::Error> 
     Ok(updated)
 }
 
+//TODO@chico: improve the filtering performance
+///TODO@chico: add pagination support
+///TODO@chico: add tests for list_pages
+/// list_pages() lists all unique page names from the entities.
+/// It scans all entities and collects the "page/name" attributes,
+/// sorts them, removes duplicates, and returns the list.
+/// Returns a Result containing a vector of page names or an error.
 pub async fn list_pages() -> Result<Vec<String>, sqlx::Error> {
     let mut conn = conn().await;
     let entities = scan_entities(&mut conn).await?;
@@ -208,6 +212,19 @@ pub async fn list_pages() -> Result<Vec<String>, sqlx::Error> {
     Ok(pages)
 }
 
+pub async fn search_blocks(term: &str) -> Result<Vec<Entity>, sqlx::Error> {
+    let mut conn = conn().await;
+    let mut entities = scan_entities(&mut conn).await?;
+    let _ = conn.close().await;
+
+    entities.retain(|entity| {
+        matches!(entity.attrs.get("block/content"), Some(Value::String(title)) if title.contains(term))
+    });
+
+    entities.sort_by(|a, b| a.id.cmp(&b.id));
+    Ok(entities)
+}
+
 //TODO@chico: improve the filtering performance
 //TODO@chico: add pagination support
 //TOODO@chico: add tests for list_page_blocks
@@ -216,19 +233,15 @@ pub async fn list_pages() -> Result<Vec<String>, sqlx::Error> {
 /// matching the provided page ID.
 pub async fn list_page_blocks(page_id: &str) -> Result<Vec<Entity>, sqlx::Error> {
     let mut conn = conn().await;
-    let entities = scan_entities(&mut conn).await?;
+    let mut entities = scan_entities(&mut conn).await?;
     let _ = conn.close().await;
 
-    let mut blocks = Vec::new();
-    for entity in entities {
-        if let Some(Value::String(page)) = entity.attrs.get("block/page") {
-            if page == page_id {
-                blocks.push(entity);
-            }
-        }
-    }
-    blocks.sort_by(|a, b| a.id.cmp(&b.id));
-    Ok(blocks)
+    entities.retain(|entity| {
+        matches!(entity.attrs.get("block/page"), Some(Value::String(page)) if page == page_id)
+    });
+
+    entities.sort_unstable_by(|a, b| a.id.cmp(&b.id));
+    Ok(entities)
 }
 
 #[cfg(test)]
